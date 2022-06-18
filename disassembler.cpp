@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
 		unsigned int addr1, addr2;
 		
 		for (int i = 0; i < fileSize; i += 2) {
-			// cout << hex << fileData[i];
 			printf("%.2X%.2X  -  ", fileData[i], fileData[i+1]);
 
 			switch (fileData[i] & 0xF0) {
@@ -48,10 +47,6 @@ int main(int argc, char* argv[]) {
 					}
 					break;
 			}
-
-			// if (fileData[i] >= 0x60 && fileData[i] <= 0x6F) {
-			// 	printf("  -  V%.1X = %d", (fileData[i] - 0x60), fileData[i+1]);
-			// }
 
 			cout << endl;
 		}
