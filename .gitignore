@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+
+# CHIP-8 roms
+roms/
