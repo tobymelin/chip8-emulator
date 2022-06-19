@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 					}
 					break;
 				case 0x10:
-					printf("GOTO %X", ((fileData[i] & 0xF) << 8) + fileData[i+1]);
+					printf("GOTO %X", addrCombined & 0xFFF);
 					break;
 				case 0x20:
 					printf("*(0x%X)()", addrCombined & 0xFFF);
