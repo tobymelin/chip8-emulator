@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 					printf("Skip next if V%X != %X", (fileData[i] & 0xF), fileData[i+1]);
 					break;
 				case 0x50:
-					printf("Skip next if V%X = V%X", (fileData[i] & 0xF), (fileData[i+1] & 0xF0));
+					printf("Skip next if V%X == V%X", (fileData[i] & 0xF), (fileData[i+1] & 0xF0));
 					break;
 				case 0x60:
 					printf("V%.1X = %X", (fileData[i] & 0xF), fileData[i+1]);
