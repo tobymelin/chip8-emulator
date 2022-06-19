@@ -96,7 +96,58 @@ int main(int argc, char* argv[]) {
 					}
 					break;
 				case 0x90:
-					printf("Skip next if V%X != V%X", addr1 & 0xF, (addr2 & 0xF0) >> 4)
+					printf("Skip next if V%X != V%X", fileData[i] & 0xF, (fileData[i+1] & 0xF0) >> 4);
+					break;
+				case 0xA0:
+					printf("I = %X", ((fileData[i] & 0xF) << 8) + fileData[i+1]);
+					break;
+				case 0xB0:
+					printf("PC = V0 + %X", ((fileData[i] & 0xF) << 8) + fileData[i+1]);
+					break;
+				case 0xC0:
+					printf("V%X = rand() & %X", fileData[i] & 0xF, fileData[i+1]);
+					break;
+				case 0xD0:
+					printf("draw(V%X, V%X, %X)", fileData[i] & 0xF, (fileData[i+1] & 0xF0) >> 4, fileData[i+1] & 0xF);
+					break;
+				case 0xE0:
+					if (fileData[i+1] == 0x9E) {
+						printf("Skip next if key at V%X is pressed", fileData[i] & 0xF);
+					}
+					else if (fileData[i+1] == 0xA1) {
+						printf("Skip next if key at V%X is NOT pressed", fileData[i] & 0xF);
+					}
+					break;
+				case 0xF0:
+					switch (fileData[i+1]) {
+						case 0x07:
+							printf("Set V%X = DT value", fileData[i] & 0xF);
+							break;
+						case 0x0A:
+							printf("Wait for key press, store in V%X", fileData[i] & 0xF);
+							break;
+						case 0x15:
+							printf("Set DT = V%X", fileData[i] & 0xF);
+							break;
+						case 0x18:
+							printf("Set ST = V%X", fileData[i] & 0xF);
+							break;
+						case 0x1E:
+							printf("Set I = I + V%X", fileData[i] & 0xF);
+							break;
+						case 0x29:
+							printf("Set I = address of sprite stored in V%X", fileData[i] & 0xF);
+							break;
+						case 0x33:
+							printf("Store BCD value of V%X in I, I+1, I+2", fileData[i] & 0xF);
+							break;
+						case 0x55:
+							printf("Store V0 to V%X in I", fileData[i] & 0xF);
+							break;
+						case 0x65:
+							printf("Fill V0 to V%X with data from I", fileData[i] & 0xF);
+							break;
+					}
 					break;
 			}
 
