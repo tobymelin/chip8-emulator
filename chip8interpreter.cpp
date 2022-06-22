@@ -20,7 +20,9 @@ int main(int argc, char* argv[]) {
 	// PC = 16-bit program counter (currently executing address)
 	// SP = 8-bit stack pointer (points to topmost level of the stack)
 	unsigned short int VX[0xF], DT, ST;
-	unsigned short int PC = 0, SP = 0;
+	unsigned short int PC = 0;
+	unsigned short int stack[16];
+	unsigned short int *SP = &stack[0];
 	unsigned int I, temp;
 
 	streampos fileSize;
@@ -43,11 +45,12 @@ int main(int argc, char* argv[]) {
 				case 0x00:
 					if (addrCombined == 0x00E0) {
 						printf("CLEAR SCREEN");
+						// TODO: Implement once graphics is implemented
 					}
 					else if (addrCombined == 0x00EE) {
 						printf("return;");
-						PC = SP;
-						SP = 0;
+						PC = *SP;
+						SP = SP > &stack[0] ? SP - 16 : &stack[0];
 					}
 					else {
 						printf("CALL ROUTINE AT ADDRESS %.3X", addrCombined & 0xFFF);
@@ -56,11 +59,13 @@ int main(int argc, char* argv[]) {
 					break;
 				case 0x10:
 					printf("GOTO %X", addrCombined & 0xFFF);
-					SP = PC;
 					PC = addrCombined & 0xFFF;
 					break;
 				case 0x20:
 					printf("*(0x%X)()", addrCombined & 0xFFF);
+					SP = SP + 16;
+					*SP = PC;
+					PC = addrCombined & 0xFFF;
 					break;
 				case 0x30:
 					printf("Skip next if V%X == %X", (fileData[i] & 0xF), fileData[i+1]);
@@ -111,6 +116,12 @@ int main(int argc, char* argv[]) {
 							printf("V%.1X += V%.1X", addr1, addr2);
 							// Set VF to 1 if there is a carry, else 0
 							temp = VX[addr1] + VX[addr2];
+
+							if (temp > 0xFF)
+									VX[0xF] = 1;
+
+							VX[addr1] = temp & 0xFF;
+
 							break;
 						case 0x5:
 							printf("V%.1X -= V%.1X", addr1, addr2);
@@ -161,9 +172,11 @@ int main(int argc, char* argv[]) {
 							break;
 						case 0x15:
 							printf("Set DT = V%X", fileData[i] & 0xF);
+							DT = fileData[i] & 0xF;
 							break;
 						case 0x18:
 							printf("Set ST = V%X", fileData[i] & 0xF);
+							ST = fileData[i] & 0xF;
 							break;
 						case 0x1E:
 							printf("Set I = I + V%X", fileData[i] & 0xF);
