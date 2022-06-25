@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 	// ST = 8-bit sound timer;
 	// PC = 16-bit program counter (currently executing address)
 	// SP = 8-bit stack pointer (points to topmost level of the stack)
-	unsigned short int VX[0xF], DT, ST;
+	unsigned short int VX[16], DT, ST;
 	unsigned short int PC = 0;
 	unsigned short int stack[16];
 	unsigned short int *SP = &stack[0];
@@ -144,9 +144,9 @@ int main(int argc, char* argv[]) {
 						// Current interpretation: Borrow can only happen if VX[addr2] > VX[addr1]
 						// ie. strictly greater than.
 						if (VX[addr1] >= VX[addr2])
-							VF = 1;
+							VX[0xF] = 1;
 						else
-							VF = 0;
+							VX[0xF] = 0;
 
 						break;
 					case 0x6: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
@@ -163,9 +163,9 @@ int main(int argc, char* argv[]) {
 
 						// Set VF to 0 if there is a borrow, else 1
 						if (VX[addr2] >= VX[addr1])
-							VF = 1;
+							VX[0xF] = 1;
 						else
-							VF = 0;
+							VX[0xF] = 0;
 
 						break;
 					case 0xE: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
@@ -179,15 +179,22 @@ int main(int argc, char* argv[]) {
 				break;
 			case 0x90:
 				printf("Skip next if V%X != V%X", fileData[i] & 0xF, (fileData[i+1] & 0xF0) >> 4);
+
+				if (VX[fileData[i] & 0xF] != (fileData[i+1] >> 4))
+					PC += 16;
+
 				break;
 			case 0xA0:
 				printf("I = %X", ((fileData[i] & 0xF) << 8) + fileData[i+1]);
+				I = addrCombined & 0xFFF;
 				break;
 			case 0xB0:
 				printf("PC = V0 + %X", ((fileData[i] & 0xF) << 8) + fileData[i+1]);
+				PC = VX[0] + addrCombined & 0xFFF;
 				break;
 			case 0xC0:
 				printf("V%X = rand() & %X", fileData[i] & 0xF, fileData[i+1]);
+				VX[fileData[i] & 0xF] = rand() % 256;
 				break;
 			case 0xD0:
 				printf("draw(V%X, V%X, %X)", fileData[i] & 0xF, (fileData[i+1] & 0xF0) >> 4, fileData[i+1] & 0xF);
