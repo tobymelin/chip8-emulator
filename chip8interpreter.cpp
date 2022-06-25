@@ -128,6 +128,8 @@ int main(int argc, char* argv[]) {
 
 						if (temp > 0xFF)
 							VX[0xF] = 1;
+						else
+							VX[0xF] = 0;
 
 						VX[addr1] = temp & 0xFF;
 
