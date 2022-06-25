@@ -79,17 +79,17 @@ int main(int argc, char* argv[]) {
 			case 0x30:
 				printf("Skip next if V%X == %X", (fileData[i] & 0xF), fileData[i+1]);
 				if (VX[fileData[i] & 0xF] == fileData[i+1])
-					PC += 4;
+					PC += 16;
 				break;
 			case 0x40:
 				printf("Skip next if V%X != %X", (fileData[i] & 0xF), fileData[i+1]);
 				if (VX[fileData[i] & 0xF] != fileData[i+1])
-					PC += 4;
+					PC += 16;
 				break;
 			case 0x50:
 				printf("Skip next if V%X == V%X", (fileData[i] & 0xF), (fileData[i+1] & 0xF0));
 				if (VX[fileData[i] & 0xF] == VX[(fileData[i+1] & 0xF0) >> 4])
-					PC += 4;
+					PC += 16;
 				break;
 			case 0x60:
 				printf("V%.1X = %X", (fileData[i] & 0xF), fileData[i+1]);
