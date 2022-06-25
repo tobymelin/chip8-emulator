@@ -123,9 +123,9 @@ int main(int argc, char* argv[]) {
 						break;
 					case 0x4:
 						printf("V%.1X += V%.1X", addr1, addr2);
-						// Set VF to 1 if there is a carry, else 0
 						temp = VX[addr1] + VX[addr2];
 
+						// Set VF to 1 if there is a carry, else 0
 						if (temp > 0xFF)
 							VX[0xF] = 1;
 						else
@@ -136,17 +136,44 @@ int main(int argc, char* argv[]) {
 						break;
 					case 0x5:
 						printf("V%.1X -= V%.1X", addr1, addr2);
+
+						VX[addr1] = (VX[addr1] - VX[addr2]) % 0x100;
+
 						// Set VF to 0 if there is a borrow, else 1
+						// TODO: Correct? Contradicting information on whether this should be >= or >
+						// Current interpretation: Borrow can only happen if VX[addr2] > VX[addr1]
+						// ie. strictly greater than.
+						if (VX[addr1] >= VX[addr2])
+							VF = 1;
+						else
+							VF = 0;
+
 						break;
-					case 0x6:
-						printf("VF = V%.1X & 0xF, V%.1X >> 1", addr1, addr1);
+					case 0x6: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
+						printf("VF = V%.1X & 0xF, V%.1X >> 1", addr2, addr2);
+
+						VX[0xF] = VX[addr2] & 0b1;
+						VX[addr1] = VX[addr2] >> 1;
+
 						break;
 					case 0x7:
 						printf("V%.1X = V%.1X - V%.1X", addr1, addr1, addr2);
+
+						VX[addr1] = (VX[addr2] - VX[addr1]) % 0x100;
+
 						// Set VF to 0 if there is a borrow, else 1
+						if (VX[addr2] >= VX[addr1])
+							VF = 1;
+						else
+							VF = 0;
+
 						break;
-					case 0xE:
-						printf("VF = V%.1X & 0xF0, V%.1X << 1", addr1, addr1);
+					case 0xE: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
+						printf("VF = V%.1X & 0xF0, V%.1X << 1", addr2, addr2);
+
+						VX[0xF] = VX[addr2] & 0b10000000;
+						VX[addr1] = VX[addr2] << 1;
+
 						break;
 				}
 				break;
