@@ -25,6 +25,8 @@ int main(int argc, char* argv[]) {
 	fileSize = chip8file.tellg();
 	chip8file.seekg(0, ios::beg);
 
+	cout << fileSize << endl;
+
 	// Read file into vector
 	vector<unsigned char> fileData(fileSize);
 	chip8file.read((char*) &fileData[0], fileSize);
