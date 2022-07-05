@@ -9,7 +9,7 @@ using namespace std;
 class Memory {
 	private:
 		vector<unsigned char> mem;
-		//vector<unsigned char> mem = vector<unsigned char>(MEMSIZE);
+		bool rom_loaded;
 	public:
 		Memory();
 		void load_rom(string f, uint16_t start_pos);

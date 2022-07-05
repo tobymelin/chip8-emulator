@@ -6,10 +6,10 @@
 using namespace std;
 
 Memory::Memory() {
-	//mem(MEMSIZE);
-	mem = vector<unsigned char>(MEMSIZE);
-	//mem = vector<unsigned char>(MEMSIZE);
+	mem = vector<unsigned char>(MEMSIZE, 0);
+	rom_loaded = false;
 }
+
 
 void Memory::load_rom(string f, uint16_t start_pos) {
 	ifstream chip8file;
@@ -24,21 +24,31 @@ void Memory::load_rom(string f, uint16_t start_pos) {
 		fileSize = chip8file.tellg();
 		chip8file.seekg(0, ios::beg);
 
-		cout << fileSize << endl;
-		cout << mem[0] << endl;
+		cout << "Loading rom " << f << ", size: " << fileSize << " bytes" << endl;
 		chip8file.read((char*) &mem[0], fileSize);
+
+		rom_loaded = true;
 	}
 	else {
-		cout << "Could not open file " + f << endl;
+		cout << "Could not open file " << f << endl;
 	}
 }
 
+
+uint16_t Memory::read_op(uint16_t addr) {
+	uint16_t op = (unsigned int)* &mem[addr] << 8 | (unsigned int)* &mem[addr+1];
+
+	printf("%.4X", op);
+
+	return op;
+}
+
+
 int main() {
-	Memory* test;
+	Memory* test = new Memory;
 
 	test->load_rom("Pong [Paul Vervalin, 1990].ch8", 0);
-
-	cout << MEMSIZE << endl;
+	test->read_op(0);
 
 	return 0;
 }
