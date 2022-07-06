@@ -1,3 +1,6 @@
+#ifndef EMU_MEMORY_H
+#define EMU_MEMORY_H
+
 #include <vector>
 #include <string>
 
@@ -16,4 +19,5 @@ class Memory {
 		uint16_t read_op(uint16_t addr);
 };
 
+#endif
 

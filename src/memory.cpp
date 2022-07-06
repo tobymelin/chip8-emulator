@@ -44,12 +44,12 @@ uint16_t Memory::read_op(uint16_t addr) {
 }
 
 
-int main() {
-	Memory* test = new Memory;
-
-	test->load_rom("Pong [Paul Vervalin, 1990].ch8", 0);
-	test->read_op(0);
-
-	return 0;
-}
+//int main() {
+	//Memory* test = new Memory();
+//
+	//test->load_rom("Pong [Paul Vervalin, 1990].ch8", 0);
+	//test->read_op(0);
+//
+	//return 0;
+//}
 

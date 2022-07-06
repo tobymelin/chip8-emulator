@@ -1,4 +1,7 @@
-#include "memory.h";
+#ifndef EMU_CPU_H
+#define EMU_CPU_H
+
+#include "memory.h"
 
 class CPU {
 	private:
@@ -9,8 +12,12 @@ class CPU {
 		uint16_t* stack[16]; // Stack
 		uint16_t* SP; // Stack pointer
 
-		Memory* mem;
+		Memory *mem;
  	public:
 		CPU();
+
+		void memory(Memory *mem_) { mem = mem_; };
 };
+
+#endif
 
