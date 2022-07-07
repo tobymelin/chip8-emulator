@@ -36,7 +36,7 @@ void Memory::load_rom(string f, uint16_t start_pos) {
 
 
 uint16_t Memory::read_op(uint16_t addr) {
-	uint16_t op = (unsigned int)* &mem[addr] << 8 | (unsigned int)* &mem[addr+1];
+	uint16_t op = mem[addr] << 8 | mem[addr+1];
 
 	printf("%.4X", op);
 
