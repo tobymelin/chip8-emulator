@@ -38,18 +38,6 @@ void Memory::load_rom(string f, uint16_t start_pos) {
 uint16_t Memory::fetch_op(uint16_t addr) {
 	uint16_t op = mem[addr] << 8 | mem[addr+1];
 
-	//printf("%.4X\n", op);
-
 	return op;
 }
-
-
-//int main() {
-	//Memory* test = new Memory();
-//
-	//test->load_rom("Pong [Paul Vervalin, 1990].ch8", 0);
-	//test->read_op(0);
-//
-	//return 0;
-//}
 
