@@ -3,7 +3,11 @@
 
 using namespace std;
 
-CPU::CPU() {}
+CPU::CPU() {
+	// Set PC to the starting address of 
+	// the loaded rom.
+	PC = 0x200;
+}
 
 bool CPU::emulate() {
  	bool retval = true;

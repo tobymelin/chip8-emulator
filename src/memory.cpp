@@ -51,7 +51,7 @@ void Memory::load_rom(string f, uint16_t start_pos) {
 		chip8file.seekg(0, ios::beg);
 
 		cout << "Loading rom " << f << ", size: " << fileSize << " bytes" << endl;
-		chip8file.read((char*) &mem[0], fileSize);
+		chip8file.read((char*) &mem[start_pos], fileSize);
 
 		rom_loaded = true;
 	}
