@@ -41,3 +41,11 @@ uint16_t Memory::fetch_op(uint16_t addr) {
 	return op;
 }
 
+uint16_t Memory::read_byte(uint16_t addr) {
+	return mem[addr];
+}
+
+void Memory::write_byte(uint16_t addr, uint8_t byte) {
+	mem[addr] = byte;
+}
+

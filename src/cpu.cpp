@@ -5,7 +5,9 @@ using namespace std;
 
 CPU::CPU() {}
 
-void CPU::emulate() {
+bool CPU::emulate() {
+ 	bool retval = true;
+
 	uint16_t op = mem->fetch_op(PC);
 	PC += 2;
 	uint16_t op_byte1 = (op & 0xFF00) >> 8;
@@ -27,8 +29,10 @@ void CPU::emulate() {
 				//SP = SP > &stack[0] ? SP - 16 : &stack[0];
 			}
 			else {
-				printf("CALL ROUTINE AT ADDRESS %.3X", op & 0xFFF);
-				PC = op & 0xFFF;
+				// Ignore all other 0x0nnn calls
+				//printf("CALL ROUTINE AT ADDRESS %.3X", op & 0xFFF);
+				//stack[SP++] = PC;
+				//PC = op & 0xFFF;
 			}
 			break;
 		case 0x1000:
@@ -37,24 +41,24 @@ void CPU::emulate() {
 			break;
 		case 0x2000:
 			printf("*(0x%X)()", op & 0xFFF);
-			SP = SP + 1;
+			SP += 1;
 			stack[SP] = PC;
 			PC = op & 0xFFF;
 			break;
 		case 0x3000:
 			printf("Skip next if V%X == %X", (op_byte1 & 0xF), op_byte2);
 			if (VX[op_byte1 & 0xF] == op_byte2)
-				PC += 16;
+				PC += 2;
 			break;
 		case 0x4000:
 			printf("Skip next if V%X != %X", (op_byte1 & 0xF), op_byte2);
 			if (VX[op_byte1 & 0xF] != op_byte2)
-				PC += 16;
+				PC += 2;
 			break;
 		case 0x5000:
 			printf("Skip next if V%X == V%X", (op_byte1 & 0xF), (op_byte2 & 0xF0));
 			if (VX[op_byte1 & 0xF] == VX[(op_byte2 & 0xF0) >> 4])
-				PC += 16;
+				PC += 2;
 			break;
 		case 0x6000:
 			printf("V%.1X = %X", (op_byte1 & 0xF), op_byte2);
@@ -108,7 +112,7 @@ void CPU::emulate() {
 					// TODO: Correct? Contradicting information on whether this should be >= or >
 					// Current interpretation: Borrow can only happen if VX[addr2] > VX[addr1]
 					// ie. strictly greater than.
-					if (VX[addr1] >= VX[addr2])
+					if (VX[addr1] > VX[addr2])
 						VX[0xF] = 1;
 					else
 						VX[0xF] = 0;
@@ -146,7 +150,7 @@ void CPU::emulate() {
 			printf("Skip next if V%X != V%X", op_byte1 & 0xF, (op_byte2 & 0xF0) >> 4);
 
 			if (VX[op_byte1 & 0xF] != (op_byte2 >> 4))
-				PC += 16;
+				PC += 2;
 
 			break;
 		case 0xA000:
@@ -198,23 +202,38 @@ void CPU::emulate() {
 					break;
 				case 0x29:
 					printf("Set I = address of sprite stored in V%X", op_byte1 & 0xF);
-					// TODO: Implement
+					I = VX[op_byte1 & 0xF] * 0x05;
 					break;
 				case 0x33:
 					printf("Store BCD value of V%X in I, I+1, I+2", op_byte1 & 0xF);
-					// TODO: Implement
+
+ 	 	 	 	 	addr1 = op_byte1 & 0xF;
+					temp = (VX[temp] - VX[temp]/100 * 100) / 10;
+
+					mem->write_byte(I, VX[temp] / 100);
+					mem->write_byte(I+1, temp);
+					mem->write_byte(I+2, VX[temp] - VX[temp]/100*100 - temp * 10);
+
 					break;
 				case 0x55:
-					printf("Store V0 to V%X in I", op_byte1 & 0xF);
-					// TODO: Implement
+					printf("Store V0 to V%X starting at mem[I]", op_byte1 & 0xF);
+
+					for (int register_idx = 0; register_idx <= (op_byte1 & 0xF); register_idx++) {
+						mem->write_byte(I + register_idx, VX[register_idx]);
+					}
 					break;
 				case 0x65:
-					printf("Fill V0 to V%X with data from I", op_byte1 & 0xF);
-					// TODO: Implement
+					printf("Fill V0 to V%X with data starting from mem[I]", op_byte1 & 0xF);
+
+					for (int register_idx = 0; register_idx <= (op_byte1 & 0xF); register_idx++) {
+						VX[register_idx] = mem->read_byte(I + register_idx);
+					}
 					break;
 			}
 			break;
 		}
 	cout << endl;
+
+	return retval;
 }
 

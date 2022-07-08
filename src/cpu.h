@@ -18,7 +18,7 @@ class CPU {
 		CPU();
 
 		void memory(Memory *mem_) { mem = mem_; };
-		void emulate();
+		bool emulate();
 };
 
 #endif
