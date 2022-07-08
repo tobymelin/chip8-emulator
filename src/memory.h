@@ -16,7 +16,7 @@ class Memory {
 	public:
 		Memory();
 		void load_rom(string f, uint16_t start_pos);
-		uint16_t read_op(uint16_t addr);
+		uint16_t fetch_op(uint16_t addr);
 };
 
 #endif

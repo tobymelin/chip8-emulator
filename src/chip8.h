@@ -11,6 +11,7 @@ class CHIP8 {
 	public:
 		CHIP8();
 
+		void emulate();
 		void load_rom(string f);
 };
 

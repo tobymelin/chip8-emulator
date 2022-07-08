@@ -7,12 +7,13 @@ CPU::CPU() {}
 
 void CPU::emulate() {
 	uint16_t op = mem->fetch_op(PC);
-	uint16_t op_byte1 = (op & 0xF000) >> 8;
-	uint16_t op_byte2 = op & 0xF0;
+	PC += 2;
+	uint16_t op_byte1 = (op & 0xFF00) >> 8;
+	uint16_t op_byte2 = op & 0xFF;
 
 	uint16_t addr1, addr2, temp;
 
-	cout << op << endl << op_byte1 << endl << op_byte2 << endl;
+	//cout << hex << op << endl << op_byte1 << endl << op_byte2 << endl;
 
 	switch (op & 0xF000) {
 		case 0x0:
@@ -22,22 +23,22 @@ void CPU::emulate() {
 			}
 			else if (op == 0x00EE) {
 				printf("return;");
-				PC = *SP;
+				PC = stack[SP];
 				//SP = SP > &stack[0] ? SP - 16 : &stack[0];
 			}
 			else {
 				printf("CALL ROUTINE AT ADDRESS %.3X", op & 0xFFF);
-				PC = (uint16_t*) (op & 0xFFF);
+				PC = op & 0xFFF;
 			}
 			break;
 		case 0x1000:
 			printf("GOTO %X", op & 0xFFF);
-			PC = (uint16_t*) (op & 0xFFF);
+			PC = op & 0xFFF;
 			break;
 		case 0x2000:
 			printf("*(0x%X)()", op & 0xFFF);
-			SP = SP + 16;
-			*SP = PC;
+			SP = SP + 1;
+			stack[SP] = PC;
 			PC = op & 0xFFF;
 			break;
 		case 0x3000:
@@ -154,7 +155,7 @@ void CPU::emulate() {
 			break;
 		case 0xB000:
 			printf("PC = V0 + %X", ((op_byte1 & 0xF) << 8) + op_byte2);
-			PC = (uint16_t*) (VX[0] + op & 0xFFF);
+			PC = VX[0] + op & 0xFFF;
 			break;
 		case 0xC000:
 			printf("V%X = rand() & %X", op_byte1 & 0xF, op_byte2);
@@ -214,5 +215,6 @@ void CPU::emulate() {
 			}
 			break;
 		}
+	cout << endl;
 }
 
