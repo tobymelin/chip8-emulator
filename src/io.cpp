@@ -25,6 +25,12 @@ IO::~IO() {
 	SDL_Quit();
 }
 
+void IO::clear_screen() {
+	for (int i = 0; i < sizeof(screen_pixels); i++) {
+		screen_pixels[i] = 0;
+	}
+}
+
 // Helper function for drawing screen pixels
 void IO::draw_rect(uint16_t pos_x, uint16_t pos_y) {
 	pixel.x = pos_x * RES_MULT;
