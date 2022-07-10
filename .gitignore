@@ -34,3 +34,6 @@
 
 # CHIP-8 roms
 roms/
+
+# Compiled files in dist
+dist/
