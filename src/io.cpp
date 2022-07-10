@@ -4,7 +4,7 @@
 // Initialise SDL window and renderer
 IO::IO() {
   SDL_Init(SDL_INIT_VIDEO);
-  window = SDL_CreateWindow("SDL Game", 0, 0, VID_WIDTH * RES_MULT, VID_HEIGHT * RES_MULT, SDL_WINDOW_OPENGL);
+  window = SDL_CreateWindow("CHIP-8 Emulator", 0, 0, VID_WIDTH * RES_MULT, VID_HEIGHT * RES_MULT, SDL_WINDOW_OPENGL);
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
@@ -12,11 +12,6 @@ IO::IO() {
 	//pixel = { 0, 0, 1*RES_MULT, 1*RES_MULT };
 	pixel.h = 1*RES_MULT;
 	pixel.w = 1*RES_MULT;
-
-	// Basic test to make sure pixels are
-	// rendered on screen.
-	screen_pixels[68] = 1;
-	screen_pixels[108] = 1;
 }
 
 IO::~IO() {
@@ -66,7 +61,7 @@ bool IO::emulate() {
 	}
 
 	SDL_RenderPresent(renderer);
-	SDL_Delay( 500 );
+	SDL_Delay( 50 );
 
 	return retval;
 }
