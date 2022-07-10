@@ -14,13 +14,15 @@ class CPU {
 		uint16_t stack[16]; // Stack
 		uint16_t SP; // Stack pointer
 
+		void drw(uint16_t VX, uint16_t VY, uint16_t N);
+
 		Memory *mem;
 		IO *io;
  	public:
 		CPU();
 
-		void memory(Memory *mem_) { mem = mem_; };
-		void io(IO *io_) { io = io_; };
+		void attach_memory(Memory *mem_) { mem = mem_; };
+		void attach_io(IO *io_) { io = io_; };
 
 		bool emulate();
 };

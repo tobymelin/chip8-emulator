@@ -24,6 +24,7 @@ class IO {
 
 		bool emulate();
 		void clear_screen();
+		bool change_pixel(uint16_t pos_x, uint16_t pos_y, bool val);
 		void draw_rect(uint16_t pos_x, uint16_t pos_y);
 };
 

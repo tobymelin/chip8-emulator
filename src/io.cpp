@@ -71,3 +71,12 @@ bool IO::emulate() {
 	return retval;
 }
 
+// XOR for pixels, return value = 1 if pixel changes from 1 to 0 (ie. pixel clash)
+bool IO::change_pixel(uint16_t pos_x, uint16_t pos_y, bool val) {
+	bool retval = screen_pixels[pos_x + pos_y * 64] & val;
+
+	// XOR between current pixel value and requested
+	screen_pixels[pos_x + pos_y * 64] = screen_pixels[pos_x + pos_y * 64] ^ val;
+
+	return retval;
+}

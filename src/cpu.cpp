@@ -172,7 +172,7 @@ bool CPU::emulate() {
 			break;
 		case 0xD000:
 			printf("draw(V%X, V%X, %X)", op_byte1 & 0xF, (op_byte2 & 0xF0) >> 4, op_byte2 & 0xF);
-			// TODO: Draw sprite
+			drw(VX[op_byte1 & 0xF], VX[(op_byte2 & 0xF0) >> 4], op_byte2 & 0xF);
 			break;
 		case 0xE000:
 			if (op_byte2 == 0x9E) {
@@ -242,3 +242,31 @@ bool CPU::emulate() {
 	return retval;
 }
 
+
+void CPU::drw(uint16_t vx, uint16_t vy, uint16_t N) {
+	uint16_t start_x = vx % VID_WIDTH;
+	uint16_t start_y = vy % VID_HEIGHT;
+
+	VX[0xF] = 0;
+
+	uint8_t sprite_row;
+	bool pixel;
+
+	for (int i = 0; i < N; i++) {
+		sprite_row = mem->read_byte(I + i);
+
+		if (start_y + N > VID_HEIGHT)
+			break;
+
+		for (int col = 0; col < 8; col++) {
+			if (start_x + col > VID_WIDTH)
+				break;
+
+			// Calculate pixel on/off for each bit
+			pixel = sprite_row & (0x01 << (7 - col));
+
+			// Set pixel on/off and update VF if pixel is already set
+ 	 	 	VX[0xF] = VX[0xF] | io->change_pixel(start_x + col, start_y + N, pixel);
+		}
+	}
+}
