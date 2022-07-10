@@ -3,15 +3,18 @@
 
 #include "memory.h"
 #include "cpu.h"
+#include "io.h"
 
 class CHIP8 {
 	private:
 		Memory *mem;
 		CPU *cpu;
+		IO *io;
+
 	public:
 		CHIP8();
 
-		void emulate();
+		void boot();
 		void load_rom(string f);
 };
 

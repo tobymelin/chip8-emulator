@@ -5,6 +5,7 @@
 CHIP8::CHIP8() {
 	mem = new Memory();
 	cpu = new CPU();
+	io = new IO();
 
 	// Initialise CPU connection to memory
 	cpu->memory(mem);
@@ -15,19 +16,14 @@ void CHIP8::load_rom(string f) {
 	mem->load_rom(f, 0x200);
 }
 
-void CHIP8::emulate() {
-	cpu->emulate();
-}
-
-
-int main() {
-	CHIP8* emu = new CHIP8;
-	emu->load_rom("Pong [Paul Vervalin, 1990].ch8");
-
+// Boot CHIP8 and run main loop
+void CHIP8::boot() {
 	while (true) {
-		emu->emulate();
-	}
+		if (!cpu->emulate())
+			break;
 
-	return 0;
+		if (!io->emulate())
+			break;
+	}
 }
 
