@@ -105,13 +105,11 @@ bool CPU::emulate() {
 					else
 						VX[0xF] = 0;
 
-					VX[addr1] = temp & 0xFF;
+					VX[addr1] = temp % 0x100;
 
 					break;
 				case 0x5:
 					printf("V%.1X -= V%.1X", addr1, addr2);
-
-					VX[addr1] = (VX[addr1] - VX[addr2]) % 0x100;
 
 					// Set VF to 0 if there is a borrow, else 1
 					// TODO: Correct? Contradicting information on whether this should be >= or >
@@ -122,10 +120,13 @@ bool CPU::emulate() {
 					else
 						VX[0xF] = 0;
 
+					VX[addr1] = (VX[addr1] - VX[addr2]) % 0x100;
+
 					break;
 				case 0x6: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
 					printf("VF = V%.1X & 0xF, V%.1X >> 1", addr2, addr2);
 
+					// TODO: Correct? Contradicting information
 					VX[0xF] = VX[addr2] & 0b1;
 					VX[addr1] = VX[addr2] >> 1;
 
@@ -133,18 +134,19 @@ bool CPU::emulate() {
 				case 0x7:
 					printf("V%.1X = V%.1X - V%.1X", addr1, addr1, addr2);
 
-					VX[addr1] = (VX[addr2] - VX[addr1]) % 0x100;
-
 					// Set VF to 0 if there is a borrow, else 1
-					if (VX[addr2] >= VX[addr1])
+					if (VX[addr2] > VX[addr1])
 						VX[0xF] = 1;
 					else
 						VX[0xF] = 0;
+
+					VX[addr1] = (VX[addr2] - VX[addr1]) % 0x100;
 
 					break;
 				case 0xE: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
 					printf("VF = V%.1X & 0xF0, V%.1X << 1", addr2, addr2);
 
+					// TODO: Correct? Contradicting information
 					VX[0xF] = VX[addr2] & 0b10000000;
 					VX[addr1] = VX[addr2] << 1;
 
@@ -154,7 +156,7 @@ bool CPU::emulate() {
 		case 0x9000:
 			printf("Skip next if V%X != V%X", op_byte1 & 0xF, (op_byte2 & 0xF0) >> 4);
 
-			if (VX[op_byte1 & 0xF] != (op_byte2 >> 4))
+			if (VX[op_byte1 & 0xF] != VX[op_byte2 >> 4])
 				PC += 2;
 
 			break;
