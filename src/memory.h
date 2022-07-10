@@ -13,6 +13,7 @@ class Memory {
 	private:
 		vector<unsigned char> mem;
 		bool rom_loaded;
+
 	public:
 		Memory();
 		void load_rom(string f, uint16_t start_pos);

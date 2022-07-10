@@ -18,6 +18,7 @@ class IO {
 		// Keep the pixel buffer in-memory to allow for on-off operations of
 		// pixels based on CHIP-8 opcodes.
 		bool screen_pixels[VID_HEIGHT * VID_WIDTH];
+
 	public:
 		IO();
 		~IO();

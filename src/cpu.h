@@ -18,6 +18,7 @@ class CPU {
 
 		Memory *mem;
 		IO *io;
+
  	public:
 		CPU();
 
