@@ -46,8 +46,8 @@ bool CPU::emulate() {
 			break;
 		case 0x2000:
 			printf("*(0x%X)()", op & 0xFFF);
-			SP += 1;
-			stack[SP] = PC;
+			//SP += 1;
+			stack[SP++] = PC;
 			PC = op & 0xFFF;
 			break;
 		case 0x3000:
@@ -256,12 +256,13 @@ void CPU::drw(uint16_t vx, uint16_t vy, uint16_t N) {
 
 	for (int i = 0; i < N; i++) {
 		sprite_row = mem->read_byte(I + i);
+		cout << hex << (int)sprite_row << endl;
 
-		if (start_y + N > VID_HEIGHT)
+		if (start_y + N >= VID_HEIGHT)
 			break;
 
 		for (int col = 0; col < 8; col++) {
-			if (start_x + col > VID_WIDTH)
+			if (start_x + col >= VID_WIDTH)
 				break;
 
 			// Calculate pixel on/off for each bit
