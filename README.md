@@ -7,6 +7,15 @@ NOTE: This is WIP and code is continuously updated to add additional functionali
 The starting point is building a CHIP-8 disassembler to get the basic functionality and interpreter implemented. This will later on be implemented as part of a renderer to form the full CHIP-8 emulator.
 
 
+## Dependencies
+
+* SDL2
+
+## Building
+
+* To build the CHIP8 file disassembler, run `make disassembler`.
+* To build the main CHIP8 emulator, run `make build` in the root directory.
+
 ## Useful references
 
 https://stevelosh.com/blog/2016/12/chip8-graphics/
