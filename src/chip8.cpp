@@ -7,8 +7,9 @@ CHIP8::CHIP8() {
 	cpu = new CPU();
 	io = new IO();
 
-	// Initialise CPU connection to memory
+	// Initialise CPU connection to memory and IO
 	cpu->memory(mem);
+	cpu->io(io);
 }
 
 void CHIP8::load_rom(string f) {

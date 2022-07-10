@@ -2,6 +2,7 @@
 #define EMU_CPU_H
 
 #include "memory.h"
+#include "io.h"
 
 class CPU {
 	private:
@@ -14,10 +15,13 @@ class CPU {
 		uint16_t SP; // Stack pointer
 
 		Memory *mem;
+		IO *io;
  	public:
 		CPU();
 
 		void memory(Memory *mem_) { mem = mem_; };
+		void io(IO *io_) { io = io_; };
+
 		bool emulate();
 };
 
