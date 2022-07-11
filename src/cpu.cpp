@@ -20,6 +20,7 @@ bool CPU::emulate() {
 	uint16_t addr1, addr2, temp;
 
 	//cout << hex << op << endl << op_byte1 << endl << op_byte2 << endl;
+	cout << hex << op << "   ";
 
 	switch (op & 0xF000) {
 		case 0x0:
@@ -127,9 +128,10 @@ bool CPU::emulate() {
 				case 0x6: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
 					printf("VF = V%.1X & 0xF, V%.1X >> 1", addr2, addr2);
 
+
 					// TODO: Correct? Contradicting information
-					VX[0xF] = VX[addr2] & 0b1;
-					VX[addr1] = VX[addr2] >> 1;
+					VX[0xF] = VX[addr2] & 0x1;
+					VX[addr1] = (VX[addr2] >> 1) % 0x100;
 
 					break;
 				case 0x7:
@@ -148,8 +150,9 @@ bool CPU::emulate() {
 					printf("VF = V%.1X & 0xF0, V%.1X << 1", addr2, addr2);
 
 					// TODO: Correct? Contradicting information
+					// TODO: Improve implementation by switching to uint8_t
 					VX[0xF] = VX[addr2] & 0b10000000;
-					VX[addr1] = VX[addr2] << 1;
+					VX[addr1] = (VX[addr2] << 1) % 0x100;
 
 					break;
 			}
