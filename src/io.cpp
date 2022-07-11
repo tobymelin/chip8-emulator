@@ -31,7 +31,7 @@ void IO::draw_rect(uint16_t pos_x, uint16_t pos_y) {
 	pixel.x = pos_x * RES_MULT;
 	pixel.y = pos_y * RES_MULT;
 
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0, 0, 0xFF);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 	SDL_RenderFillRect(renderer, &pixel);
 }
 
