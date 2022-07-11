@@ -71,7 +71,7 @@ bool CPU::emulate() {
 			break;
 		case 0x7000:
 			printf("V%.1X += %X", (op_byte1 & 0xF), op_byte2);
-			VX[op_byte1 & 0xF] += op_byte2;
+			VX[op_byte1 & 0xF] = (VX[op_byte1 & 0xF] + op_byte2) % 0x100;
 			break;
 		case 0x8000:
 			addr1 = op_byte1 & 0xF;
