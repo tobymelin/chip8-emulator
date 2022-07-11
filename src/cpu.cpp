@@ -120,7 +120,8 @@ bool CPU::emulate() {
 					else
 						VX[0xF] = 0;
 
-					VX[addr1] = (VX[addr1] - VX[addr2]) % 0x100;
+					// TODO: Improve implementation by switching to uint8_t
+					VX[addr1] = (VX[addr1] + 0x100 - VX[addr2]) % 0x100;
 
 					break;
 				case 0x6: // Undocumented opcode, VX = VY >> 1 in CHIP-8, VX = VX >> 1 in CHIP-48/SCHIP
