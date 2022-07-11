@@ -29,7 +29,7 @@ bool CPU::emulate() {
 			}
 			else if (op == 0x00EE) {
 				printf("return;");
-				PC = stack[SP--];
+				PC = stack[--SP];
 			}
 			else {
 				// Ignore all other 0x0nnn calls - not used according to
