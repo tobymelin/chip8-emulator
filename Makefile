@@ -1,5 +1,5 @@
 CXX = g++
-CFLAGS = -L/usr/local/lib -lSDL2 -I/usr/local/include/SDL2 -D_THREAD_SAFE
+CFLAGS = $(shell sdl2-config --libs --cflags)
 
 OUTPUTDIR = dist
 
