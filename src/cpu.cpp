@@ -219,11 +219,12 @@ bool CPU::emulate() {
 					printf("Store BCD value of V%X in I, I+1, I+2", op_byte1 & 0xF);
 
  	 	 	 	 	addr1 = op_byte1 & 0xF;
-					temp = (VX[temp] - VX[temp]/100 * 100) / 10;
+					temp = (VX[addr1] - VX[addr1]/100 * 100) / 10;
 
-					mem->write_byte(I, VX[temp] / 100);
-					mem->write_byte(I+1, temp);
-					mem->write_byte(I+2, VX[temp] - VX[temp]/100*100 - temp * 10);
+					// TODO: Improve implementation by changing VX to uint8_t
+					mem->write_byte(I, (uint8_t) VX[addr1] / 100);
+					mem->write_byte(I+1, (uint8_t) temp);
+					mem->write_byte(I+2, (uint8_t) VX[addr1] - VX[addr1]/100*100 - temp * 10);
 
 					break;
 				case 0x55:
