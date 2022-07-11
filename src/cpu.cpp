@@ -256,7 +256,6 @@ void CPU::drw(uint16_t vx, uint16_t vy, uint16_t N) {
 
 	for (int i = 0; i < N; i++) {
 		sprite_row = mem->read_byte(I + i);
-		cout << hex << (int)sprite_row << endl;
 
 		if (start_y + N >= VID_HEIGHT)
 			break;
@@ -266,10 +265,10 @@ void CPU::drw(uint16_t vx, uint16_t vy, uint16_t N) {
 				break;
 
 			// Calculate pixel on/off for each bit
-			pixel = sprite_row & (0x01 << (7 - col));
+			pixel = (sprite_row & (0x01 << (7 - col))) >> (7 - col);
 
 			// Set pixel on/off and update VF if pixel is already set
- 	 	 	VX[0xF] = VX[0xF] | io->change_pixel(start_x + col, start_y + N, pixel);
+ 	 	 	VX[0xF] = VX[0xF] | io->change_pixel(start_x + col, start_y + i, pixel);
 		}
 	}
 }
