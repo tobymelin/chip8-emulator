@@ -8,8 +8,10 @@ IO::IO() {
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+	// Reset all screen pixels to avoid junk data sometimes appearing on screen
+	clear_screen();
+
 	// Initialise screen pixel
-	//pixel = { 0, 0, 1*RES_MULT, 1*RES_MULT };
 	pixel.h = 1*RES_MULT;
 	pixel.w = 1*RES_MULT;
 }
